@@ -13,7 +13,11 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
-            background-color: #ffffff;
+            background-image: url("{% static 'img/madera.jpg' %}");
+            background-repeat: repeat;
+            background-size: cover; /* o puedes probar con 'auto' si prefieres */
+            background-attachment: fixed;
+            background-position: center center;
             color: #333333;
         }
 

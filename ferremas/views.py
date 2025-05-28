@@ -113,6 +113,41 @@ def actualizar_cantidad_carrito(request, producto_id):
             messages.error(request, f'Error al conectar con la API: {str(e)}')
 
     return redirect('carrito', carrito_id=CARRITO_ID)
+def limpiar_carrito(request, carrito_id):
+    url = f"{API_BASE_URL}/carrito/{carrito_id}/limpiar"
+
+    try:
+        response = requests.post(url)  # <- usar POST porque así lo define la API
+        response.raise_for_status()
+        messages.success(request, "Carrito limpiado exitosamente.")
+    except requests.exceptions.HTTPError as e:
+        try:
+            error = e.response.json().get('error', 'Error al limpiar carrito')
+        except Exception:
+            error = 'Error al limpiar carrito'
+        messages.error(request, error)
+    except Exception as e:
+        messages.error(request, f'Error al conectar con la API: {str(e)}')
+
+    return redirect('carrito', carrito_id=carrito_id)
+
+def eliminar_producto_del_carrito(request, carrito_id, producto_id):
+    url = f"{API_BASE_URL}/carrito/{carrito_id}/eliminar/{producto_id}"
+
+    try:
+        response = requests.delete(url)  # <- usar DELETE porque así lo define la API
+        response.raise_for_status()
+        messages.success(request, "Producto eliminado del carrito.")
+    except requests.exceptions.HTTPError as e:
+        try:
+            error = e.response.json().get('error', 'Error al eliminar producto')
+        except Exception:
+            error = 'Error al eliminar producto'
+        messages.error(request, error)
+    except Exception as e:
+        messages.error(request, f'Error al conectar con la API: {str(e)}')
+
+    return redirect('carrito', carrito_id=carrito_id)
 
 def finalizar_compra(request, carrito_id):
     if request.method == 'POST':
