@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Ferremas{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+    
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+        }
+
+        header {
+            background-color: #ff6600;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        nav {
+            background-color: #ffa366;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .contenido {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        footer {
+            background-color: #ff6600;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+            }
+
+            nav a {
+                margin: 10px 0;
+            }
+        }
+        /* Botón carrito fijo */
+        .btn-carrito {
+          background-color: #ff6600; /* naranja fuerte */
+          color: #000000; /* texto negro */
+          border: none;
+          box-shadow: 0 2px 8px rgba(255, 102, 0, 0.6);
+          font-weight: bold;
+          font-size: 1.1rem;
+          transition: background-color 0.3s ease;
+        }
+
+        .btn-carrito:hover,
+        .btn-carrito:focus {
+          background-color: #cc5200; /* naranja más oscuro al hover */
+          color: #fff;
+          box-shadow: 0 0 12px #cc5200;
+        }
+
+        /* Modal carrito */
+        .modal-content {
+          background-color: #1a1a1a; /* negro oscuro */
+          color: #ff6600; /* naranja para textos y títulos */
+          border-radius: 8px;
+          border: 2px solid #ff6600;
+        }
+
+        /* Título modal */
+        .modal-title {
+          color: #ff6600;
+          font-weight: 700;
+        }
+
+        /* Botones del modal */
+        .modal-footer .btn-secondary {
+          background-color: #333333;
+          color: #ff6600;
+          border: 1px solid #ff6600;
+        }
+
+        .modal-footer .btn-secondary:hover {
+          background-color: #ff6600;
+          color: #1a1a1a;
+          border-color: #ff6600;
+        }
+
+        .modal-footer .btn-success {
+          background-color: #ff6600;
+          color: #1a1a1a;
+          font-weight: 700;
+        }
+
+        .modal-footer .btn-success:hover {
+          background-color: #cc5200;
+          color: #fff;
+        }
+
+        /* Tabla dentro del modal */
+        .table {
+          color: #ffcc99; /* naranja claro */
+        }
+
+        .table thead th {
+          border-bottom: 2px solid #ff6600;
+        }
+
+        .table tbody tr:hover {
+          background-color: #333333;
+        }
+
+        /* Totales */
+        .modal-body h5 {
+          color: #ff6600;
+          font-weight: 700;
+          text-align: right;
+          margin-top: 15px;
+        }
+        #carritoContenido table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 1rem;
+          background-color: #000000; /* fondo negro */
+          color: #ffa366; /* texto naranja claro */
+          font-size: 0.9rem;
+        }
+
+        #carritoContenido th, #carritoContenido td {
+          border: 1px solid #ffa366;
+          padding: 8px 12px;
+          text-align: left;
+        }
+
+        #carritoContenido thead {
+          background-color: #ff6600; /* naranja más intenso para encabezado */
+          color: #ffffff; /* texto blanco */
+        }
+
+        #carritoContenido tbody tr:hover {
+          background-color: #ffa366; /* hover naranja claro */
+          color: #000000; /* texto negro en hover */
+        }
+
+        #carritoContenido h5 {
+          margin-top: 1rem;
+          color: #ff6600;
+          text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Ferremas</h1>
+</header>
+
+<nav>
+    <a href="{% url 'inicio' %}">Inicio</a>
+    <a href="{% url 'productos' %}">Productos</a>
+</nav>
+
+<main class="contenido">
+    {% block content %}
+    <!-- Contenido principal aquí -->
+    {% endblock %}
+</main>
+<button type="button" class="btn btn-carrito position-fixed" 
+  style="top: 5rem; right: 1rem; z-index: 1150;" 
+  data-bs-toggle="modal" data-bs-target="#carritoModal">
+  🛒 Carrito (<span id="carritoCantidad">0</span>)
+</button>
+
+  <!-- Modal del carrito -->
+  <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="carritoModalLabel">Tu Carrito</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body" id="carritoContenido">
+          <p>Cargando...</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <a href="{% url 'carrito' carrito_id=carrito_id|default:1 %}" class="btn btn-success">Ir al carrito completo</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<footer>
+    &copy; 2025 Ferremas - Todos los derechos reservados
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+<script>
+  // Define aquí el carritoId; cambia 1 por la variable que uses en backend
+  var carritoId = 1;
+
+  var carritoModal = document.getElementById('carritoModal');
+  carritoModal.addEventListener('show.bs.modal', function (event) {
+    const carritoContenido = document.getElementById('carritoContenido');
+    carritoContenido.innerHTML = 'Cargando...';
+
+    fetch(`http://localhost:5000/carrito/${carritoId}`)
+      .then(response => {
+        if (!response.ok) throw new Error('Error en la respuesta de la API');
+        return response.json();
+      })
+      .then(data => {
+        if (!data || data.length === 0) {
+          carritoContenido.innerHTML = '<p>Tu carrito está vacío.</p>';
+          document.getElementById('carritoCantidad').textContent = '0';
+          return;
+        }
+
+        let html = `<table class="table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio Unitario</th>
+              <th>Total</th>
+            </tr>
+          </thead><tbody>`;
+
+        let totalCarrito = 0;
+        let cantidadTotal = 0;
+
+        data.forEach(item => {
+          const total = item.cantidad * item.precio_unitario;
+          totalCarrito += total;
+          cantidadTotal += item.cantidad;
+
+          html += `<tr>
+            <td>${item.nombre}</td>
+            <td>${item.cantidad}</td>
+            <td>$${item.precio_unitario.toFixed(2)}</td>
+            <td>$${total.toFixed(2)}</td>
+          </tr>`;
+        });
+
+        html += `</tbody></table>`;
+        html += `<h5>Total: $${totalCarrito.toFixed(2)}</h5>`;
+        carritoContenido.innerHTML = html;
+
+        document.getElementById('carritoCantidad').textContent = cantidadTotal;
+      })
+      .catch(err => {
+        carritoContenido.innerHTML = '<p>Error al cargar el carrito.</p>';
+        console.error(err);
+        document.getElementById('carritoCantidad').textContent = '0';
+      });
+  });
+</script>
+</body>
+</html>

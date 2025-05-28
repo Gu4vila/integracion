@@ -1,0 +1,79 @@
+{% extends 'ferremas/base.html' %}
+
+{% block content %}
+<h1>Productos disponibles</h1>
+
+<form method="get" action="{% url 'productos' %}" style="margin-bottom: 20px;">
+  <input 
+    type="text" 
+    name="nombre" 
+    placeholder="Buscar por nombre" 
+    value="{{ nombre|default:'' }}" 
+    style="padding: 8px; width: 250px; border-radius: 4px; border: 1px solid #ccc;"
+  />
+  <button type="submit" style="padding: 8px 12px; border-radius: 4px; border:none; background-color:#007bff; color:white; cursor:pointer;">
+    Buscar
+  </button>
+</form>
+
+{% if messages %}
+  <ul>
+    {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<div class="productos-lista">
+  {% for producto in productos %}
+    <div class="producto-card">
+      <h3>{{ producto.nombre }} - {{ producto.id }}</h3>
+      <p>Precio: ${{ producto.precio }}</p>
+      <p>Stock disponible: {{ producto.stock }}</p>
+
+      <form action="{% url 'agregar_carrito' producto.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Agregar al carrito</button>
+      </form>
+    </div>
+  {% empty %}
+    <p>No hay productos disponibles.</p>
+  {% endfor %}
+</div>
+{% endblock content %}
+
+<style>
+.productos-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.producto-card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  width: 250px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px #ccc;
+}
+
+.producto-card h3 {
+  margin-top: 0;
+}
+
+.producto-card button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.producto-card button:hover {
+  background-color: #0056b3;
+}
+.producto-card p {
+  margin: 5px 0;
+}
+</style>

@@ -1,0 +1,133 @@
+{% extends "ferremas/base.html" %}
+{% load static %}
+
+{% block title %}Productos{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f3f3f3;
+
+    }
+
+    h1, h2, h3, h4, h5 {
+        color: #e3e5e7;
+    }
+
+    .text-center {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    footer {
+        background-color: #343a40;
+        color: white;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+        z-index: 1030;
+        text-align: center;
+
+    }
+    .container-fluid {
+        padding: 0 15px;
+    }
+    .row {
+        margin: 0;
+    }
+    .col {
+        padding: 0;
+    }
+    .col.text-center {
+        padding: 0;
+    }
+    .col.text-center p {
+        margin: 0;
+    }
+    /* contenido del cuerpo */
+    
+    .cuerpo {
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    .cuerpo h1, .cuerpo h2, .cuerpo h3, .cuerpo h4, .cuerpo h5 {
+        margin: 10px 0;
+    }
+    .cuerpo h1 {
+        font-size: 2.5rem;
+    }
+    .cuerpo h2 {
+        font-size: 2rem;
+    }
+    .cuerpo h3 {
+        font-size: 1.75rem;
+    }
+    .cuerpo h4 {
+        font-size: 1.5rem;
+    }
+    .cuerpo h5 {
+        font-size: 1.25rem;
+    }
+    .cuerpo p {
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #6c757d;
+    }
+    .cuerpo a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .cuerpo a:hover {
+        text-decoration: underline;
+    }
+    .cuerpo a:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    .cuerpo a:active {
+        color: #0056b3;
+    }
+    .cuerpo a:visited {
+        color: #6f42c1;
+    }
+    .cuerpo a:link {
+        color: #007bff;
+    }
+    .cuerpo a:visited {
+        color: #6f42c1;
+    }
+    /* darle a la clase "cuerpo" el fondo de la imagen de static */
+    .cuerpo {
+        background-image: url("{% static '/images/herramientasfondo.png' %}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 30vh;
+        width: 100%;
+        color: white;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        text-align: center;
+        padding: 20px;
+        box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4); /* Oscurece ligeramente para mejorar legibilidad */
+        border-radius: 0 0 10px 10px;
+    }
+</style>
+<div class="cuerpo">
+    <h1 class="text-center">Bienvenido</h1>
+    <h2 class="text-center">A la tienda de Ferremas</h2>
+    <h3 class="text-center">Aquí encontrarás todo lo que necesitas para tus proyectos de ferretería</h3>
+    <h4 class="text-center">Explora nuestros productos y encuentra lo que buscas</h4>
+    <h5 class="text-center">¡Estamos aquí para ayudarte!</h5>
+
+</div>
+{%endblock%}

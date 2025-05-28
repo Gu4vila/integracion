@@ -1,0 +1,50 @@
+{% extends 'ferremas/base.html' %}
+
+{% block content %}
+<h2>Carrito de Compras</h2>
+
+{% if messages %}
+  <ul>
+    {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% if carrito %}
+  <table>
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for item in carrito %}
+        <tr>
+        <td>{{ item.nombre }}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>${{ item.precio_unitario }}</td>
+        <td>${{ item.total }}</td>
+        <td>
+            <form method="post" action="{% url 'actualizar_cantidad_carrito' item.id_producto %}" class="d-flex align-items-center">
+            {% csrf_token %}
+            <input type="number" name="cantidad" value="{{ item.cantidad }}" min="1" class="form-control me-2" style="width: 80px;">
+            <button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
+            </form>
+        </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <form method="post" action="{% url 'finalizar_compra' carrito_id=carrito_id %}">
+    {% csrf_token %}
+    <button type="submit">Finalizar Compra</button>
+  </form>
+    {% else %}
+    <p>Tu carrito está vacío.</p>
+    {% endif %}
+
+<a href="{% url 'productos' %}">Volver a productos</a>
+{% endblock %}
