@@ -1,0 +1,35 @@
+{% extends 'ferremas/base.html' %}
+{% block content %}
+<h2>Registro de Usuario</h2>
+
+{% if messages %}
+  <ul>
+    {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+<form method="post" action="{% url 'register' %}">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="username" class="form-label">Nombre de Usuario</label>
+    <input type="text" name="username" id="username" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Correo Electrónico</label>
+    <input type="email" name="email" id="email" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label for="password1" class="form-label">Contraseña</label>
+    <input type="password" name="password1" id="password1" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label for="password2" class="form-label">Confirmar Contraseña</label>
+    <input type="password" name="password2" id="password2" class="form-control" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Registrar</button>
+</form>
+<p>¿Ya tienes una cuenta? <a href="{% url 'login_view' %}">Iniciar sesión</a></p>
+
+{% endblock %}
+

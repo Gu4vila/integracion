@@ -1,6 +1,8 @@
 import requests
 from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 
 API_BASE_URL = 'http://localhost:5000'  # o la URL donde corre tu API Flask
 CARRITO_ID = 1  # Aquí podrías gestionar usuarios y carritos reales, pero para prueba dejamos fijo.
@@ -151,23 +153,21 @@ def eliminar_producto_del_carrito(request, carrito_id, producto_id):
 
 def finalizar_compra(request, carrito_id):
     if request.method == 'POST':
-        # Verificar si el carrito tiene productos
         verificar_url = f"{API_BASE_URL}/carrito/{carrito_id}"
         try:
             verificar_response = requests.get(verificar_url)
             verificar_response.raise_for_status()
             data = verificar_response.json()
-            if not data.get('carrito'):  # lista vacía
+            if not data:  # Si la lista está vacía
                 messages.warning(request, "El carrito está vacío. Agrega productos antes de finalizar la compra.")
                 return redirect('carrito', carrito_id=carrito_id)
-        except:
+        except requests.exceptions.RequestException:
             messages.error(request, "No se pudo verificar el carrito.")
             return redirect('carrito', carrito_id=carrito_id)
 
-        # Si hay productos, se finaliza la compra
         url = f"{API_BASE_URL}/carrito/{carrito_id}/finalizar"
         try:
-            response = requests.post(url, json={})  # JSON vacío
+            response = requests.post(url)
             response.raise_for_status()
             messages.success(request, "Compra finalizada exitosamente.")
         except requests.exceptions.RequestException as e:
@@ -181,4 +181,103 @@ def ventas_resumen(request):
     return render(request, 'ferremas/ventas_resumen.html')
 def usuarios(request):
     return render(request, 'ferremas/usuarios.html')
+def formulario_registro(request):
+    return render(request, 'ferremas/formulario_registro.html')
 
+def register(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+
+        if password1 != password2:
+            messages.error(request, "Las contraseñas no coinciden.")
+            return redirect('register')
+
+        # Enviar los datos a la API Flask
+        api_url = f"{API_BASE_URL}/usuarios"
+        data = {
+            'nombre': username,
+            'email': email,
+            'contrasena': password1
+        }
+
+        try:
+            response = requests.post(api_url, json=data)
+            if response.status_code == 201:
+                messages.success(request, "Usuario registrado exitosamente.")
+                return redirect('inicio')
+            else:
+                error_msg = response.json().get('error', 'Error desconocido.')
+                messages.error(request, f"Error al registrar usuario: {error_msg}")
+        except requests.exceptions.RequestException as e:
+            messages.error(request, f"No se pudo conectar con el servidor: {e}")
+
+    return render(request, 'ferremas/formulario_registro.html')
+
+def login_view(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('username')
+        contrasena = request.POST.get('password')
+
+        data = {
+            'nombre': nombre,
+            'contrasena': contrasena
+        }
+
+        try:
+            response = requests.post(f'{API_BASE_URL}/login', json=data)
+            if response.status_code == 200:
+                data = response.json()
+                request.session['usuario_id'] = data['usuario_id']
+                request.session['usuario_nombre'] = data['nombre']
+                messages.success(request, f"Bienvenido, {data['nombre']}!")
+                return redirect('inicio')
+            else:
+                error_msg = response.json().get('error', 'Error desconocido.')
+                messages.error(request, f"Error al iniciar sesión: {error_msg}")
+        except requests.exceptions.RequestException as e:
+            messages.error(request, f"No se pudo conectar con la API: {e}")
+
+    return render(request, 'ferremas/login.html')
+def logout_view(request):
+    try:
+        del request.session['usuario_id']
+        del request.session['usuario_nombre']
+        messages.success(request, "Has cerrado sesión exitosamente.")
+    except KeyError:
+        messages.error(request, "No estabas logueado.")
+
+    return redirect('inicio')
+
+@require_POST
+def agregar_carrito_ajax(request):
+    producto_id = request.POST.get('producto_id')
+    cantidad = request.POST.get('cantidad', 1)
+
+    url = f"{API_BASE_URL}/carrito/{CARRITO_ID}/agregar"
+    payload = {
+        "producto_id": producto_id,
+        "cantidad": int(cantidad)
+    }
+
+    try:
+        response = requests.post(url, json=payload)
+        if response.status_code == 200:
+            return JsonResponse({'ok': True, 'mensaje': 'Producto agregado'})
+        else:
+            error = response.json().get('error', 'Error al agregar producto')
+            return JsonResponse({'ok': False, 'error': error})
+    except Exception as e:
+        return JsonResponse({'ok': False, 'error': str(e)})
+
+def api_carrito(request, carrito_id):
+    url = f"{API_BASE_URL}/carrito/{carrito_id}"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        carrito = response.json()
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse(carrito, safe=False)

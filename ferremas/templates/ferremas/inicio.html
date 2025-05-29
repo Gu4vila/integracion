@@ -7,11 +7,13 @@
 <style>
     body {
         background-color: #f3f3f3;
-
     }
 
     h1, h2, h3, h4, h5 {
-        color: #e3e5e7;
+        /* Quité el color aquí para que se herede blanco de .cuerpo */
+        margin: 0.2em 0;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+        font-weight: 600;
     }
 
     .text-center {
@@ -29,105 +31,86 @@
         left: 0;
         z-index: 1030;
         text-align: center;
-
     }
+
     .container-fluid {
         padding: 0 15px;
     }
+
     .row {
         margin: 0;
     }
+
     .col {
         padding: 0;
     }
+
     .col.text-center {
         padding: 0;
     }
+
     .col.text-center p {
         margin: 0;
     }
-    /* contenido del cuerpo */
-    
     .cuerpo {
-        padding: 20px;
-        background-color: #ffffff;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-    .cuerpo h1, .cuerpo h2, .cuerpo h3, .cuerpo h4, .cuerpo h5 {
-        margin: 10px 0;
-    }
-    .cuerpo h1 {
-        font-size: 2.5rem;
-    }
-    .cuerpo h2 {
-        font-size: 2rem;
-    }
-    .cuerpo h3 {
-        font-size: 1.75rem;
-    }
-    .cuerpo h4 {
-        font-size: 1.5rem;
-    }
-    .cuerpo h5 {
-        font-size: 1.25rem;
-    }
-    .cuerpo p {
-        font-size: 1rem;
-        line-height: 1.5;
-        color: #6c757d;
-    }
-    .cuerpo a {
-        color: #007bff;
-        text-decoration: none;
-    }
-    .cuerpo a:hover {
-        text-decoration: underline;
-    }
-    .cuerpo a:focus {
-        outline: none;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    }
-    .cuerpo a:active {
-        color: #0056b3;
-    }
-    .cuerpo a:visited {
-        color: #6f42c1;
-    }
-    .cuerpo a:link {
-        color: #007bff;
-    }
-    .cuerpo a:visited {
-        color: #6f42c1;
-    }
-    /* darle a la clase "cuerpo" el fondo de la imagen de static */
-    .cuerpo {
-        background-image: url("{% static '/images/herramientasfondo.png' %}");
+        position: relative;
+        width: 100%;
+        height: 30vh;
+        background-image: url("{% static 'images/herramientasfondo.png' %}");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        height: 30vh;
-        width: 100%;
-        color: white;
 
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
-        text-align: center;
-        padding: 20px;
-        box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4); /* Oscurece ligeramente para mejorar legibilidad */
-        border-radius: 0 0 10px 10px;
+        transition: transform 0.5s ease, filter 0.5s ease;
+        cursor: pointer;
     }
+    
+    .cuerpo:hover {
+        filter: brightness(0.4);
+        transform: scale(1.1); /* Agranda suavemente */
+        z-index: 10; /* Para que esté arriba solo al hacer hover */
+    }
+
+    .cuerpo .texto-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        width: 90%;
+        pointer-events: none;
+    }
+
+    .cuerpo:hover .texto-overlay {
+        opacity: 1;
+        z-index: 20;
+    }
+
+    /* Textos con sombra para mejor legibilidad */
+    .cuerpo .texto-overlay h1,
+    .cuerpo .texto-overlay h2,
+    .cuerpo .texto-overlay h3,
+    .cuerpo .texto-overlay h4,
+    .cuerpo .texto-overlay h5 {
+        text-shadow: 0 0 5px rgba(0,0,0,0.7);
+        margin: 0.2rem 0;
+    }
+
+</style>
+
+
 </style>
 <div class="cuerpo">
+<div class="texto-overlay">
     <h1 class="text-center">Bienvenido</h1>
     <h2 class="text-center">A la tienda de Ferremas</h2>
     <h3 class="text-center">Aquí encontrarás todo lo que necesitas para tus proyectos de ferretería</h3>
     <h4 class="text-center">Explora nuestros productos y encuentra lo que buscas</h4>
     <h5 class="text-center">¡Estamos aquí para ayudarte!</h5>
+</div>
 
 </div>
 {%endblock%}

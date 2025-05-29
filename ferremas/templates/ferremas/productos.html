@@ -1,17 +1,115 @@
 {% extends 'ferremas/base.html' %}
 
 {% block content %}
+<style>
+  /* Tu estilo botón y lista, más lo nuevo para modal */
+  .btn-agregar {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
+    transition: transform 0.2s ease, background-color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+  }
+  .btn-agregar:hover {
+    background-color: #218838;
+    transform: scale(1.1) rotate(-2deg);
+    box-shadow: 0 6px 20px rgba(33, 136, 56, 0.6);
+  }
+  .btn-agregar:active {
+    animation: cart-pop 0.3s ease;
+  }
+  @keyframes cart-pop {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.4) rotate(8deg); }
+    100% { transform: scale(1); }
+  }
+
+  /* Modal background */
+  .modal-bg {
+    display: none; /* oculto por defecto */
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 9999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  /* Modal contenido */
+  .modal-bg-cantidad {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content-cantidad {
+    background-color: white;
+    padding: 20px 30px;
+    border-radius: 8px;
+    max-width: 350px;
+    width: 90%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+
+  .modal-content-cantidad input[type=number] {
+    width: 60px;
+    padding: 8px;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 15px;
+    border: 1.5px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .modal-content-cantidad button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+  }
+
+  .modal-content-cantidad .btn-cancel {
+    background-color: #dc3545;
+  }
+</style>
+
 <h1>Productos disponibles</h1>
 
-<form method="get" action="{% url 'productos' %}" style="margin-bottom: 20px;">
+<form method="get" action="{% url 'productos' %}" style="display:flex; justify-content:center; gap:12px; margin-bottom:30px;">
   <input 
     type="text" 
     name="nombre" 
     placeholder="Buscar por nombre" 
     value="{{ nombre|default:'' }}" 
-    style="padding: 8px; width: 250px; border-radius: 4px; border: 1px solid #ccc;"
+    style="padding:10px 14px; width:280px; border-radius:8px; border:1.5px solid #ccc; font-size:1rem; transition: border-color 0.3s ease;"
+    onfocus="this.style.borderColor='#007bff'"
+    onblur="this.style.borderColor='#ccc'"
   />
-  <button type="submit" style="padding: 8px 12px; border-radius: 4px; border:none; background-color:#007bff; color:white; cursor:pointer;">
+  <button 
+    type="submit" 
+    style="background-color:#007bff; color:white; border:none; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:600; transition: background-color 0.3s ease;"
+    onmouseover="this.style.backgroundColor='#0056b3'"
+    onmouseout="this.style.backgroundColor='#007bff'"
+  >
     Buscar
   </button>
 </form>
@@ -24,56 +122,69 @@
   </ul>
 {% endif %}
 
-<div class="productos-lista">
-  {% for producto in productos %}
-    <div class="producto-card">
-      <h3>{{ producto.nombre }} - {{ producto.id }}</h3>
-      <p>Precio: ${{ producto.precio }}</p>
-      <p>Stock disponible: {{ producto.stock }}</p>
-
-      <form action="{% url 'agregar_carrito' producto.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Agregar al carrito</button>
-      </form>
-    </div>
-  {% empty %}
-    <p>No hay productos disponibles.</p>
-  {% endfor %}
+<div class="productos-lista" style="max-width:700px; margin:0 auto; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+  <ul style="list-style:none; padding:0; margin:0; border-top:2px solid #007bff;">
+    {% for producto in productos %}
+      <li style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px; border-bottom:1px solid #ddd; transition: background-color 0.2s ease;"
+          onmouseover="this.style.backgroundColor='#f0f8ff'"
+          onmouseout="this.style.backgroundColor='transparent'">
+        <div style="flex-grow:1;">
+          <h3 style="margin:0 0 4px 0; font-weight:700; font-size:1.1rem; color:#222;">{{ producto.nombre }}</h3>
+          <p style="margin:2px 0; font-size:0.9rem; color:#555;">Precio: ${{ producto.precio }} | Stock: {{ producto.stock }}</p>
+        </div>
+        <!-- Botón que abre el modal -->
+        <button 
+          class="btn-agregar" 
+          type="button" 
+          onclick="openCantidadModal({{ producto.id }}, '{{ producto.nombre|escapejs }}')"
+        >
+          <i class="fas fa-cart-plus"></i> Agregar
+        </button>
+      </li>
+    {% empty %}
+      <li style="padding: 15px; color:#777;">No hay productos disponibles.</li>
+    {% endfor %}
+  </ul>
 </div>
+
+<!-- Modal -->
+<div id="modal-cantidad-producto" class="modal-bg-cantidad" style="display:none;">
+  <div class="modal-content-cantidad">
+    <h2 id="modal-product-name-cantidad">Agregar producto</h2>
+    <form id="form-agregar-cantidad" method="post" action="">
+      {% csrf_token %}
+      <label for="cantidad">Cantidad:</label><br>
+      <input type="number" id="input-cantidad" name="cantidad" value="1" min="1" required><br>
+      <button type="submit">Agregar al carrito</button>
+      <button type="button" class="btn-cancel" onclick="closeCantidadModal()">Cancelar</button>
+    </form>
+  </div>
+</div>
+
+
+<script>
+  const modalCantidad = document.getElementById('modal-cantidad-producto');
+  const modalProductName = document.getElementById('modal-product-name-cantidad');
+  const formAgregar = document.getElementById('form-agregar-cantidad');
+  const inputCantidad = document.getElementById('input-cantidad');
+
+  function openCantidadModal(productId, productName) {
+    modalProductName.textContent = `Agregar "${productName}"`;
+    formAgregar.action = `{% url 'agregar_carrito' 0 %}`.replace('0', productId);
+    inputCantidad.value = 1;
+    modalCantidad.style.display = 'flex';
+  }
+
+  function closeCantidadModal() {
+    modalCantidad.style.display = 'none';
+  }
+
+  window.addEventListener('click', function(event) {
+    if (event.target === modalCantidad) {
+      closeCantidadModal();
+    }
+  });
+</script>
+
+
 {% endblock content %}
-
-<style>
-.productos-lista {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.producto-card {
-  border: 1px solid #ddd;
-  padding: 15px;
-  width: 250px;
-  border-radius: 8px;
-  box-shadow: 2px 2px 5px #ccc;
-}
-
-.producto-card h3 {
-  margin-top: 0;
-}
-
-.producto-card button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.producto-card button:hover {
-  background-color: #0056b3;
-}
-.producto-card p {
-  margin: 5px 0;
-}
-</style>

@@ -7,15 +7,17 @@
     {% load static %}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
-    
-
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Aquí va todo tu CSS original que me pasaste, no lo toco nada para no perder nada */
+
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
             background-image: url("{% static 'img/madera.jpg' %}");
             background-repeat: repeat;
-            background-size: cover; /* o puedes probar con 'auto' si prefieres */
+            background-size: cover;
             background-attachment: fixed;
             background-position: center center;
             color: #333333;
@@ -30,8 +32,20 @@
         }
 
         header h1 {
-            margin: 0;
-            font-size: 2rem;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          font-size: 3rem;
+          font-weight: 900;
+          color: #faf8f6;
+          opacity: 0;
+          transform: scale(0.8);
+          animation: fadeZoomIn 1.5s ease forwards;
+        }
+
+        @keyframes fadeZoomIn {
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
         }
 
         nav {
@@ -181,6 +195,81 @@
           color: #ff6600;
           text-align: right;
         }
+        nav .usuario-nombre {
+          color: white;
+          font-weight: 700;
+          margin-left: 20px;
+          padding: 5px 10px;
+          background-color: #cc5200; /* naranja oscuro */
+          border-radius: 5px;
+          text-transform: uppercase;
+          font-size: 0.9rem;
+          user-select: none;
+        }
+        /* Sidebar */
+.sidebar-carrito {
+  position: fixed;
+  top: 0;
+  right: -600px;
+  width: 600px;
+  height: 100%;
+  background: #fff;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.3);
+  transition: right 0.3s ease;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-carrito.abierto {
+  right: 0;
+}
+
+.sidebar-header {
+  padding: 1rem;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-contenido {
+  flex-grow: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid #ccc;
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.3);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 1040;
+}
+
+.overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Botón cerrar */
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
     </style>
 </head>
 <body>
@@ -192,6 +281,21 @@
 <nav>
     <a href="{% url 'inicio' %}">Inicio</a>
     <a href="{% url 'productos' %}">Productos</a>
+    {% if request.session.usuario_nombre %}
+      <div class="dropdown">
+        <button class="btn btn-naranja dropdown-toggle usuario-nombre" type="button" id="dropdownUsuario" data-bs-toggle="dropdown" aria-expanded="false">
+          Bienvenido, {{ request.session.usuario_nombre }}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUsuario">
+          <li><a class="dropdown-item" href="{% url 'carrito' carrito_id=carrito_id|default:1 %}">Ver carrito</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="{% url 'logout_view' %}">Cerrar sesión</a></li>
+        </ul>
+      </div>
+    {% else %}
+      <a href="{% url 'login_view' %}">Iniciar sesión</a>
+      <a href="{% url 'formulario_registro' %}"> registrate</a>
+    {% endif %}
 </nav>
 
 <main class="contenido">
@@ -199,99 +303,225 @@
     <!-- Contenido principal aquí -->
     {% endblock %}
 </main>
-<button type="button" class="btn btn-carrito position-fixed" 
-  style="top: 5rem; right: 1rem; z-index: 1150;" 
-  data-bs-toggle="modal" data-bs-target="#carritoModal">
-  🛒 Carrito (<span id="carritoCantidad">0</span>)
-</button>
 
-  <!-- Modal del carrito -->
-  <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="carritoModalLabel">Tu Carrito</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body" id="carritoContenido">
-          <p>Cargando...</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <a href="{% url 'carrito' carrito_id=carrito_id|default:1 %}" class="btn btn-success">Ir al carrito completo</a>
-        </div>
-      </div>
-    </div>
+{% if request.session.usuario_nombre %}
+<button id="btnAbrirCarrito" class="btn btn-primary">Carrito (<span id="carritoCantidad">0</span>)</button>
+
+{% endif %}
+
+<div id="sidebarCarrito" class="sidebar-carrito">
+  <div class="sidebar-header">
+    <h4>Tu Carrito</h4>
+    <button id="btnCerrarCarrito" class="btn-close">&times;</button>
   </div>
+  <div id="contenidoCarrito" class="sidebar-contenido">
+    Cargando carrito...
+  </div>
+  <div class="sidebar-footer">
+    <button id="btnFinalizarCompra" class="btn btn-success w-100">Finalizar Compra</button>
+  </div>
+</div>
 
+<div id="overlayCarrito" class="overlay"></div>
 
 <footer>
     &copy; 2025 Ferremas - Todos los derechos reservados
 </footer>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
 <script>
-  // Define aquí el carritoId; cambia 1 por la variable que uses en backend
-  var carritoId = 1;
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      // ¿Este cookie comienza con el nombre que buscamos?
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
 
-  var carritoModal = document.getElementById('carritoModal');
-  carritoModal.addEventListener('show.bs.modal', function (event) {
-    const carritoContenido = document.getElementById('carritoContenido');
-    carritoContenido.innerHTML = 'Cargando...';
+document.addEventListener('DOMContentLoaded', () => {
 
-    fetch(`http://localhost:5000/carrito/${carritoId}`)
-      .then(response => {
-        if (!response.ok) throw new Error('Error en la respuesta de la API');
-        return response.json();
-      })
-      .then(data => {
-        if (!data || data.length === 0) {
-          carritoContenido.innerHTML = '<p>Tu carrito está vacío.</p>';
-          document.getElementById('carritoCantidad').textContent = '0';
-          return;
-        }
+  const carritoId = 1; // Aquí el id real de tu carrito
 
-        let html = `<table class="table">
-          <thead>
-            <tr>
-              <th>Producto</th>
-              <th>Cantidad</th>
-              <th>Precio Unitario</th>
-              <th>Total</th>
-            </tr>
-          </thead><tbody>`;
+  const btnAbrir = document.getElementById('btnAbrirCarrito');
+  const btnCerrar = document.getElementById('btnCerrarCarrito');
+  const sidebar = document.getElementById('sidebarCarrito');
+  const overlay = document.getElementById('overlayCarrito');
+  const contenido = document.getElementById('contenidoCarrito');
+  const spanCantidad = document.getElementById('carritoCantidad');
+  const btnFinalizar = document.getElementById('btnFinalizarCompra');
 
-        let totalCarrito = 0;
-        let cantidadTotal = 0;
-
-        data.forEach(item => {
-          const total = item.cantidad * item.precio_unitario;
-          totalCarrito += total;
-          cantidadTotal += item.cantidad;
-
-          html += `<tr>
-            <td>${item.nombre}</td>
-            <td>${item.cantidad}</td>
-            <td>$${item.precio_unitario.toFixed(2)}</td>
-            <td>$${total.toFixed(2)}</td>
-          </tr>`;
-        });
-
-        html += `</tbody></table>`;
-        html += `<h5>Total: $${totalCarrito.toFixed(2)}</h5>`;
-        carritoContenido.innerHTML = html;
-
-        document.getElementById('carritoCantidad').textContent = cantidadTotal;
-      })
-      .catch(err => {
-        carritoContenido.innerHTML = '<p>Error al cargar el carrito.</p>';
-        console.error(err);
-        document.getElementById('carritoCantidad').textContent = '0';
-      });
+  btnAbrir.addEventListener('click', () => {
+    abrirSidebar();
   });
+
+  btnCerrar.addEventListener('click', () => {
+    cerrarSidebar();
+  });
+
+  overlay.addEventListener('click', () => {
+    cerrarSidebar();
+  });
+
+  function abrirSidebar() {
+    sidebar.classList.add('abierto');
+    overlay.classList.add('visible');
+    cargarCarrito();
+  }
+
+  function cerrarSidebar() {
+    sidebar.classList.remove('abierto');
+    overlay.classList.remove('visible');
+  }
+
+  async function cargarCarrito() {
+    try {
+      const res = await fetch(`http://localhost:5000/carrito/${carritoId}`);
+      const carrito = await res.json();
+
+      if (carrito.length === 0) {
+        contenido.innerHTML = '<p>Tu carrito está vacío.</p>';
+        actualizarCantidadCarrito(0);
+        return;
+      }
+
+      let html = `<table class="table">
+        <thead>
+          <tr>
+            <th>Producto</th><th>Cantidad</th><th>Precio Unit.</th><th>Total</th><th>Acciones</th>
+          </tr>
+        </thead><tbody>`;
+
+      let sumaTotal = 0;
+      let cantidadTotal = 0;
+
+      carrito.forEach(item => {
+        sumaTotal += item.total;
+        cantidadTotal += item.cantidad;
+
+        html += `
+        <tr data-producto-id="${item.id_producto}">
+          <td>${item.nombre}</td>
+          <td><input type="number" min="1" value="${item.cantidad}" class="cantidad-input" style="width:60px"></td>
+          <td>$${item.precio_unitario.toFixed(2)}</td>
+          <td>$${item.total.toFixed(2)}</td>
+          <td><button class="btn btn-danger btn-sm btn-eliminar">Eliminar</button></td>
+        </tr>`;
+      });
+
+      html += `</tbody></table>`;
+      html += `<h5>Total: $${sumaTotal.toFixed(2)}</h5>`;
+
+      contenido.innerHTML = html;
+      actualizarCantidadCarrito(cantidadTotal);
+
+      asignarEventosCarrito();
+
+    } catch (e) {
+      contenido.innerHTML = '<p>Error cargando carrito.</p>';
+      console.error(e);
+    }
+  }
+
+  function actualizarCantidadCarrito(cantidad) {
+    spanCantidad.innerText = cantidad;
+  }
+
+  function asignarEventosCarrito() {
+    // Cambiar cantidad
+    document.querySelectorAll('.cantidad-input').forEach(input => {
+      input.addEventListener('change', async (e) => {
+        let nuevoValor = parseInt(e.target.value);
+        if (nuevoValor < 1) {
+          alert('La cantidad debe ser al menos 1');
+          e.target.value = 1;
+          nuevoValor = 1;
+        }
+        const fila = e.target.closest('tr');
+        const productoId = fila.getAttribute('data-producto-id');
+
+        try {
+          const res = await fetch(`http://localhost:5000/carrito/${carritoId}/actualizar`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({producto_id: productoId, cantidad: nuevoValor})
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            alert(data.error || 'Error actualizando cantidad');
+            cargarCarrito();
+          } else {
+            cargarCarrito();
+          }
+        } catch {
+          alert('Error actualizando cantidad');
+        }
+      });
+    });
+
+    // Eliminar producto
+    document.querySelectorAll('.btn-eliminar').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const fila = e.target.closest('tr');
+        const productoId = fila.getAttribute('data-producto-id');
+        if (!confirm('¿Eliminar este producto del carrito?')) return;
+
+        try {
+          const res = await fetch(`http://localhost:5000/carrito/${carritoId}/eliminar/${productoId}`, {
+            method: 'DELETE',
+            headers: {
+              'X-CSRFToken': getCookie('csrftoken')
+            }
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            alert(data.error || 'Error eliminando producto');
+          } else {
+            cargarCarrito();
+          }
+        } catch {
+          alert('Error eliminando producto');
+        }
+      });
+    });
+  }
+
+  // Finalizar compra
+  btnFinalizar.addEventListener('click', async () => {
+    if (!confirm('¿Deseas finalizar la compra?')) return;
+    try {
+      const res = await fetch(`http://localhost:5000/carrito/${carritoId}/finalizar`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken')
+        }
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'Error al finalizar compra');
+      } else {
+        alert(data.mensaje);
+        cargarCarrito();
+      }
+    } catch {
+      alert('Error al finalizar compra');
+    }
+  });
+});
 </script>
+
+
 </body>
 </html>
