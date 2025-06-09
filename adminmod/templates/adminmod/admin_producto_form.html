@@ -1,0 +1,43 @@
+{% extends 'adminmod/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_producto_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>{{ titulo }}</h2>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label for="codigo" class="form-label">Código</label>
+      <input type="text" class="form-control" id="codigo" name="codigo" value="{{ producto.codigo|default_if_none:'' }}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre</label>
+      <input type="text" class="form-control" id="nombre" name="nombre" value="{{ producto.nombre|default_if_none:'' }}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="marca" class="form-label">Marca</label>
+      <input type="text" class="form-control" id="marca" name="marca" value="{{ producto.marca|default_if_none:'' }}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="precio" class="form-label">Precio</label>
+      <input type="number" step="0.01" class="form-control" id="precio" name="precio" value="{{ producto.precio|default_if_none:'' }}" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="stock" class="form-label">Stock</label>
+      <input type="number" class="form-control" id="stock" name="stock" value="{{ producto.stock|default_if_none:'' }}" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="{% url 'admin_productos' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

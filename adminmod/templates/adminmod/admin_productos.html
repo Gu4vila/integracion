@@ -1,0 +1,49 @@
+{% extends 'adminmod/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_productos.css' %}">
+{% endblock %}
+{% block content %}
+<h1>Gestión de Productos</h1>
+
+<form method="get" action="{% url 'admin_productos' %}">
+  <input type="text" name="nombre" placeholder="Buscar por nombre" value="{{ nombre }}">
+  <button type="submit">Buscar</button>
+  <a href="{% url 'admin_producto_crear' %}" class="btn btn-primary" style="margin-left: 20px;">+ Nuevo Producto</a>
+</form>
+
+<table>
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Nombre</th>
+      <th>Marca</th>
+      <th>Precio</th>
+      <th>Stock</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if productos %}
+      {% for producto in productos %}
+        <tr>
+          <td>{{ producto.codigo }}</td>
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.marca }}</td>
+          <td>${{ producto.precio }}</td>
+          <td>{{ producto.stock }}</td>
+          <td>
+            <a href="{% url 'admin_producto_editar' producto.id %}">Editar</a> |
+            <a href="{% url 'admin_producto_eliminar' producto.id %}" onclick="return confirm('¿Seguro que quieres eliminar este producto?');">Eliminar</a>
+          </td>
+        </tr>
+      {% endfor %}
+    {% else %}
+      <tr>
+        <td colspan="6">No hay productos para mostrar.</td>
+      </tr>
+    {% endif %}
+  </tbody>
+</table>
+
+{% endblock %}

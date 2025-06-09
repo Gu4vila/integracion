@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Administración</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="sidebar">
+        <h2 class="logo">F🌌RREMAS</h2>
+        <ul class="nav-links">
+            <li><a href="{% url 'panel_admin' %}"><i class="fas fa-tachometer-alt"></i> Panel</a></li>
+            <li><a href="{% url 'admin_productos' %}"><i class="fas fa-box-open"></i> Productos</a></li>
+            <li><a href="{% url 'admin_usuarios' %}"><i class="fas fa-users"></i> Usuarios</a></li>
+            <li><a href="{% url 'admin_ventas' %}"><i class="fas fa-chart-line"></i> Ventas</a></li>
+            <li><a href="{% url 'admin_logout' %}"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

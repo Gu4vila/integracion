@@ -1,0 +1,29 @@
+{% extends 'adminmod/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_usuarios.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="dashboard-container">
+        <h1>Gestión de usuarios</h1>
+        <p class="intro">Gestiona los usuarios de la plataforma.</p>
+        
+            <div class="cards">
+                <a href="{% url 'users_basicos' %}">
+                    <div class="card">
+                        <h2>Usuarios</h2>
+                        <p>Usuarios de la plataforma que estan enfocados en la compra de productos</p>
+                    </div>
+                </a>
+                <a href="{% url 'users_admins' %}">
+                    <div class="card">
+                        <h2>Administradores</h2>
+                        <p>Usuarios que estan habilitados para la gestion de productos y reportes de ventas.</p>
+                    
+                    </div>
+                </a>
+            </div>
+                
+    </div>
+
+{% endblock %}

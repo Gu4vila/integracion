@@ -10,36 +10,45 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Aquí va todo tu CSS original que me pasaste, no lo toco nada para no perder nada */
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #F4F1EE;
+        background-image: url("{% static 'img/madera.jpg' %}");
+        background-repeat: repeat;
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center center;
+        color: #1C1C1C;
+      }
 
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background-image: url("{% static 'img/madera.jpg' %}");
-            background-repeat: repeat;
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: center center;
-            color: #333333;
-        }
+      header {
+        background-color: #E86A33; /* Naranja acero */
+        color: white;
+        padding: 30px 0;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        border-bottom: 4px solid #2E2E2E;
+      }
 
-        header {
-            background-color: #ff6600;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+      header h1 {
+        font-size: 3rem;
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #ffffff;
+        opacity: 0;
+        transform: scale(0.8);
+        animation: fadeZoomIn 1.5s ease forwards;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+      }
 
-        header h1 {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          font-size: 3rem;
-          font-weight: 900;
-          color: #faf8f6;
-          opacity: 0;
-          transform: scale(0.8);
-          animation: fadeZoomIn 1.5s ease forwards;
+      @keyframes fadeZoomIn {
+        to {
+          opacity: 1;
+          transform: scale(1);
         }
+      }
 
         @keyframes fadeZoomIn {
           to {
@@ -47,23 +56,42 @@
             transform: scale(1);
           }
         }
-
-        nav {
-            background-color: #ffa366;
-            display: flex;
-            justify-content: center;
-            padding: 10px 0;
+      nav {
+          background-color: #2E2E2E; /* Grafito */
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 12px 0;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+          border-bottom: 3px solid #E86A33;
         }
 
         nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
+          color: #ffffff;
+          text-decoration: none;
+          margin: 0 20px;
+          font-weight: bold;
+          font-size: 1rem;
+          padding: 8px 12px;
+          border-radius: 4px;
+          transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         nav a:hover {
-            text-decoration: underline;
+          background-color: #E86A33; /* Naranja al hover */
+          color: #ffffff;
+        }
+
+        nav .usuario-nombre {
+          color: #ffffff;
+          font-weight: 700;
+          margin-left: 20px;
+          padding: 6px 12px;
+          background-color: #E86A33; /* Naranja acero */
+          border-radius: 20px;
+          text-transform: uppercase;
+          font-size: 0.85rem;
+          user-select: none;
         }
 
         .contenido {
@@ -89,24 +117,50 @@
                 margin: 10px 0;
             }
         }
-        /* Botón carrito fijo */
-        .btn-carrito {
-          background-color: #ff6600; /* naranja fuerte */
-          color: #000000; /* texto negro */
+        /* Botónes en general */
+        .btn {
+          background-color: #E86A33; /* Naranja acero */
+          color: #ffffff;
           border: none;
-          box-shadow: 0 2px 8px rgba(255, 102, 0, 0.6);
+          padding: 10px 18px;
+          border-radius: 6px;
+          font-size: 1rem;
           font-weight: bold;
+          transition: background-color 0.3s ease, box-shadow 0.3s ease;
+          cursor: pointer;
+        }
+
+        .btn:hover,
+        .btn:focus {
+          background-color: #B25124; /* Naranja más oscuro */
+          box-shadow: 0 0 10px rgba(232, 106, 51, 0.4);
+          color: #ffffff;
+        }
+
+        /* Botón específico para el carrito */
+        .btn-carrito {
+          background-color: #E86A33;
+          color: #ffffff;
           font-size: 1.1rem;
-          transition: background-color 0.3s ease;
+          padding: 10px 16px;
+          border-radius: 50px;
+          position: fixed;
+          bottom: 30px;
+          right: 30px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+          z-index: 1000;
+          transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
-        .btn-carrito:hover,
-        .btn-carrito:focus {
-          background-color: #cc5200; /* naranja más oscuro al hover */
-          color: #fff;
-          box-shadow: 0 0 12px #cc5200;
+        .btn-carrito:hover {
+          background-color: #B25124;
+          transform: scale(1.05);
         }
 
+        .btn-carrito:active {
+          transform: scale(0.98);
+        }
+        
         /* Modal carrito */
         .modal-content {
           background-color: #1a1a1a; /* negro oscuro */

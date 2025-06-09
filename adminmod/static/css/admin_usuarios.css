@@ -1,0 +1,43 @@
+.dashboard-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.dashboard-container h1 {
+    font-size: 32px;
+    color: #0ff;
+    margin-bottom: 10px;
+}
+
+.intro {
+    color: #ccc;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: linear-gradient(145deg, #081d2e, #102d40);
+    padding: 20px 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px #0ff2;
+    width: 250px;
+    transition: transform 0.3s ease;
+    color: #fff;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #0ff;
+}
+
+.card h2 {
+    color: #0ff;
+    margin-bottom: 10px;
+}

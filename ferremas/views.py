@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 
-API_BASE_URL = 'http://localhost:5000'  # o la URL donde corre tu API Flask
+API_BASE_URL = 'http://localhost:5000'
 CARRITO_ID = 1  # Aquí podrías gestionar usuarios y carritos reales, pero para prueba dejamos fijo.
 def inicio(request):
     return render(request, 'ferremas/inicio.html')

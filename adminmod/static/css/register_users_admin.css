@@ -1,0 +1,80 @@
+body {
+  background: #0b0c17;
+  color: #a0c4ff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+  color: #48cae4;
+  text-shadow: 0 0 10px #48cae4;
+  margin-bottom: 30px;
+}
+
+form {
+  background: #1b1c2d;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px #48cae4;
+  max-width: 700px;
+  margin: auto;
+  content: center;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 95%;
+  padding: 10px 14px;
+  margin-bottom: 15px;
+  border: 1px solid #48cae4;
+  background-color: #0f1022;
+  color: #a0c4ff;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #90e0ef;
+  outline: none;
+}
+
+button {
+  background: #3a0ca3;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+  display: block;
+  width: 100%;
+}
+
+button:hover {
+  background: #720026;
+}
+
+a {
+  display: inline-block;
+  margin-top: 15px;
+  color: #48cae4;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  text-align: center;
+  width: 100%;
+}
+
+a:hover {
+  color: #90e0ef;
+}
+
+.message {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ff6b6b;
+}

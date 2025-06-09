@@ -1,0 +1,31 @@
+{% extends 'adminmod/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/register_users_admin.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>{% if usuario %}Editar usuario{% else %}Registrar nuevo usuario{% endif %}</h1>
+
+<form method="post">
+  {% csrf_token %}
+  <input type="text" name="nombre" value="{{ nombre|default:'' }}" placeholder="Nombre">
+  <input type="email" name="email" value="{{ email|default:'' }}" placeholder="Email">
+
+  <input type="password" name="contrasena" placeholder="Contraseña (dejar en blanco si no se cambia)">
+  <input type="password" name="contrasena_confirm" placeholder="Confirmar contraseña">
+
+  <button type="submit">
+    {% if editar %}Modificar{% else %}Registrar{% endif %}
+  </button>
+</form>
+
+{% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'adminmod/base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/panel_admin.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="dashboard-container">
+        <h1>Bienvenido al Panel de Administración 🛠️</h1>
+        <p class="intro">Gestiona tu galaxia de productos, usuarios y ventas.</p>
+
+        <div class="cards">
+            <div class="card">
+                <h2>Usuarios</h2>
+                <p>Control total sobre las cuentas registradas.</p>
+            </div>
+            <div class="card">
+                <h2>Productos</h2>
+                <p>Administra tu inventario cósmico.</p>
+            </div>
+            <div class="card">
+                <h2>Ventas</h2>
+                <p>Observa el flujo de tu imperio comercial.</p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
