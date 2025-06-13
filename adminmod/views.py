@@ -57,9 +57,17 @@ def admin_producto_crear(request):
             'precio': request.POST.get('precio'),
             'stock': request.POST.get('stock'),
         }
+        imagen = request.FILES.get('imagen')
+
+        files = {'imagen': imagen} if imagen else None
+
         try:
-            response = requests.post(f'{API_BASE_URL}/productos', json=datos)
-            if response.status_code == 201:
+            response = requests.post(
+                f'{API_BASE_URL}/productos',
+                data=datos,
+                files=files
+            )
+            if response.status_code in (200, 201):
                 messages.success(request, "Producto creado exitosamente.")
                 return redirect('admin_productos')
             else:
@@ -69,7 +77,7 @@ def admin_producto_crear(request):
     return render(request, 'adminmod/admin_producto_form.html')
 
 # Editar producto existente
-def admin_producto_editar(request, producto_id):    
+def admin_producto_editar(request, producto_id):
     if request.method == 'POST':
         datos = {
             'codigo': request.POST.get('codigo'),
@@ -78,8 +86,16 @@ def admin_producto_editar(request, producto_id):
             'precio': request.POST.get('precio'),
             'stock': request.POST.get('stock'),
         }
+        imagen = request.FILES.get('imagen')
+
+        files = {'imagen': imagen} if imagen else None
+
         try:
-            response = requests.put(f'{API_BASE_URL}/productos/{producto_id}', json=datos)
+            response = requests.put(
+                f'{API_BASE_URL}/productos/{producto_id}',
+                data=datos,
+                files=files
+            )
             if response.status_code == 200:
                 messages.success(request, "Producto actualizado exitosamente.")
                 return redirect('admin_productos')

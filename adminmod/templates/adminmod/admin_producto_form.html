@@ -8,7 +8,7 @@
 <div class="container mt-5">
   <h2>{{ titulo }}</h2>
 
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
     <div class="mb-3">
@@ -34,6 +34,13 @@
     <div class="mb-3">
       <label for="stock" class="form-label">Stock</label>
       <input type="number" class="form-control" id="stock" name="stock" value="{{ producto.stock|default_if_none:'' }}" required>
+    </div>
+    <div>
+      <label for="imagen" class="form-label">Imagen</label>
+      <input type="file" class="form-control" id="imagen" name="imagen">
+      {% if producto.imagen %}
+        <img src="{{ producto.imagen.url }}" alt="Imagen del producto" class="img-thumbnail mt-2" style="max-width: 200px;">
+      {% endif %}
     </div>
 
     <button type="submit" class="btn btn-primary">Guardar</button>
