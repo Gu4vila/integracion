@@ -323,7 +323,14 @@
   font-size: 1.5rem;
   cursor: pointer;
 }
-
+  .carrito-fijo {
+    position: fixed;
+    top: 80%;       /* distancia desde el top de la pantalla */
+    left: 20px;     /* distancia desde el borde derecho */
+    z-index: 9999;   /* asegura que quede por encima de otros elementos */
+    border-color: #000000;
+  }
+</style>
     </style>
 </head>
 <body>
@@ -341,8 +348,6 @@
           Bienvenido, {{ request.session.usuario_nombre }}
         </button>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUsuario">
-          <li><a class="dropdown-item" href="{% url 'carrito' carrito_id=carrito_id|default:1 %}">Ver carrito</a></li>
-          <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item" href="{% url 'logout_view' %}">Cerrar sesión</a></li>
         </ul>
       </div>
@@ -359,7 +364,7 @@
 </main>
 
 {% if request.session.usuario_nombre %}
-<button id="btnAbrirCarrito" class="btn btn-primary">Carrito (<span id="carritoCantidad">0</span>)</button>
+<button id="btnAbrirCarrito" class="btn btn-primary carrito-fijo">Carrito (<span id="carritoCantidad">0</span>)</button>
 
 {% endif %}
 

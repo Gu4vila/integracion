@@ -10,23 +10,39 @@ def inicio(request):
     return render(request, 'ferremas/inicio.html')
 
 def productos(request):
-    nombre = request.GET.get('nombre', '')  # obtiene el parámetro de búsqueda o cadena vacía
-    
+    nombre = request.GET.get('nombre', '')
+    marca = request.GET.get('marca', '')
+    categoria = request.GET.get('categoria', '')
+
+    params = {
+        'nombre': nombre,
+        'marca': marca,
+        'categoria': categoria,
+    }
+
     try:
-        if nombre:
-            # Si hay nombre, llama al endpoint de búsqueda con filtro
-            response = requests.get(f'{API_BASE_URL}/productos/buscar', params={'nombre': nombre})
-        else:
-            # Si no hay filtro, obtiene todos los productos
-            response = requests.get(f'{API_BASE_URL}/productos')
-        
+        response = requests.get(f'{API_BASE_URL}/productos/buscar', params=params)
         response.raise_for_status()
         productos = response.json()
     except requests.exceptions.RequestException as e:
         productos = []
         messages.error(request, f"No se pudo obtener la lista de productos: {e}")
 
-    return render(request, 'ferremas/productos.html', {'productos': productos, 'nombre': nombre})
+    # Para llenar los select con las opciones disponibles
+    # (asumiendo que tienes listas estáticas o las obtienes de la BD/API)
+    marcas_disponibles = ['GardenPro', 'PowerMax', 'SteelTools', 'CutRight', 'FixIt', 'MeasureIt', 'LevelPro', 'WoodWork', 'ElecFix', 'SafeHands']
+    categorias_disponibles = ['Jardinería', 'Herramientas eléctricas', 'Manuales', 'Seguridad', 'Medición']  # pon tus categorías reales aquí
+
+    context = {
+        'productos': productos,
+        'nombre': nombre,
+        'marca': marca,
+        'categoria': categoria,
+        'marcas_disponibles': marcas_disponibles,
+        'categorias_disponibles': categorias_disponibles,
+    }
+    return render(request, 'ferremas/productos.html', context)
+
 
 def buscar_productos(request):
     nombre = request.GET.get('nombre', '').strip()

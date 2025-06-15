@@ -100,27 +100,37 @@
     name="nombre" 
     placeholder="Buscar por nombre" 
     value="{{ nombre|default:'' }}" 
-    style="padding:10px 14px; width:280px; border-radius:8px; border:1.5px solid #ccc; font-size:1rem; transition: border-color 0.3s ease;"
+    style="padding:10px 14px; width:200px; border-radius:8px; border:1.5px solid #ccc; font-size:1rem; transition: border-color 0.3s ease;"
     onfocus="this.style.borderColor='#007bff'"
     onblur="this.style.borderColor='#ccc'"
   />
+
+  <select name="marca" style="padding:10px 14px; border-radius:8px; border:1.5px solid #ccc; font-size:1rem;">
+    <option value="">-- Marca --</option>
+    {% for m in marcas_disponibles %}
+      <option value="{{ m }}" {% if m == marca %}selected{% endif %}>{{ m }}</option>
+    {% endfor %}
+  </select>
+
+  <select name="categoria" style="padding:10px 14px; border-radius:8px; border:1.5px solid #ccc; font-size:1rem;">
+    <option value="">-- Categoría --</option>
+    {% for c in categorias_disponibles %}
+      <option value="{{ c }}" {% if c == categoria %}selected{% endif %}>{{ c }}</option>
+    {% endfor %}
+  </select>
+
   <button 
     type="submit" 
     style="background-color:#007bff; color:white; border:none; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:600; transition: background-color 0.3s ease;"
     onmouseover="this.style.backgroundColor='#0056b3'"
     onmouseout="this.style.backgroundColor='#007bff'"
   >
-    Buscar
+    Filtrar
   </button>
 </form>
 
-{% if messages %}
-  <ul>
-    {% for message in messages %}
-      <li class="{{ message.tags }}">{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
+
+
 
 <div class="productos-lista" style="max-width:700px; margin:0 auto; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
   <ul style="list-style:none; padding:0; margin:0; border-top:2px solid #007bff;">
@@ -156,8 +166,7 @@
     <h2 id="modal-product-name-cantidad">Agregar producto</h2>
     <form id="form-agregar-cantidad" method="post" action="">
       {% csrf_token %}
-      <label for="cantidad">Cantidad:</label><br>
-      <input type="number" id="input-cantidad" name="cantidad" value="1" min="1" required><br>
+      <input type="number" id="input-cantidad" name="cantidad" value="1" min="1" hidden required><br>
       <button type="submit">Agregar al carrito</button>
       <button type="button" class="btn-cancel" onclick="closeCantidadModal()">Cancelar</button>
     </form>
@@ -172,7 +181,7 @@
   const inputCantidad = document.getElementById('input-cantidad');
 
   function openCantidadModal(productId, productName) {
-    modalProductName.textContent = `Agregar "${productName}"`;
+    modalProductName.textContent = `¿Agregar ${productName}?`;
     formAgregar.action = `{% url 'agregar_carrito' 0 %}`.replace('0', productId);
     inputCantidad.value = 1;
     modalCantidad.style.display = 'flex';
