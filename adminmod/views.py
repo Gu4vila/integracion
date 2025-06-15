@@ -57,15 +57,24 @@ def admin_producto_crear(request):
             'precio': request.POST.get('precio'),
             'stock': request.POST.get('stock'),
         }
+
+        imagen = request.FILES.get('imagen')
+        files = {'imagen': imagen} if imagen else {}
+
         try:
-            response = requests.post(f'{API_BASE_URL}/productos', json=datos)
-            if response.status_code == 201:
+            response = requests.post(
+                f'{API_BASE_URL}/productos',
+                data=datos,         # Form fields
+                files=files         # Imagen como archivo
+            )
+            if response.status_code == 200 or response.status_code == 201:
                 messages.success(request, "Producto creado exitosamente.")
                 return redirect('admin_productos')
             else:
                 messages.error(request, response.json().get('error', 'Error desconocido'))
         except requests.exceptions.RequestException as e:
             messages.error(request, f"Error al crear el producto: {e}")
+
     return render(request, 'adminmod/admin_producto_form.html')
 
 # Editar producto existente

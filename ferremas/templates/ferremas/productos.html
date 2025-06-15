@@ -128,10 +128,13 @@
       <li style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px; border-bottom:1px solid #ddd; transition: background-color 0.2s ease;"
           onmouseover="this.style.backgroundColor='#f0f8ff'"
           onmouseout="this.style.backgroundColor='transparent'">
+        <img src="{{ producto.imagen }}" alt="{{ producto.nombre }}" style="width:80px; height:80px; object-fit:cover; border-radius:8px; margin-right:15px; border:2px solid #007bff; box-shadow:0 0 8px rgba(0,123,255,0.5);">
+
         <div style="flex-grow:1;">
           <h3 style="margin:0 0 4px 0; font-weight:700; font-size:1.1rem; color:#222;">{{ producto.nombre }}</h3>
           <p style="margin:2px 0; font-size:0.9rem; color:#555;">Precio: ${{ producto.precio }} | Stock: {{ producto.stock }}</p>
         </div>
+
         <!-- Botón que abre el modal -->
         <button 
           class="btn-agregar" 

@@ -1,63 +1,72 @@
-.container {
-  max-width: 600px;
-  margin: 2rem auto;
-  background: #ffffff;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+body {
+  background: radial-gradient(ellipse at center, #0b0f1a 0%, #000000 100%);
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  overflow-x: hidden;
+  animation: stars 100s linear infinite;
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #333;
+@keyframes stars {
+  from { background-position: 0 0; }
+  to { background-position: -10000px 5000px; }
 }
 
-.form-label {
-  font-weight: bold;
-  color: #555;
+.card {
+  background: rgba(20, 20, 30, 0.7);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+  border-radius: 1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+}
+
+.btn-estelar {
+  background: linear-gradient(45deg, #00f0ff, #ff00e0);
+  color: white;
+  border: none;
+  box-shadow: 0 0 15px #ff00e0;
+  transition: all 0.3s ease-in-out;
+  border-radius: 2rem;
+  padding: 0.75rem 1.5rem;
+}
+
+.btn-estelar:hover {
+  box-shadow: 0 0 30px #00f0ff;
+  background: linear-gradient(45deg, #ff00e0, #00f0ff);
+  transform: scale(1.05);
+}
+
+h1, h2, h3, h4, h5 {
+  text-shadow: 0 0 10px #00f0ff, 0 0 20px #ff00e0;
+}
+
+.navbar {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
 }
 
 .form-control {
-  width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  transition: border-color 0.3s;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid #00f0ff;
+  border-radius: 0.5rem;
 }
 
 .form-control:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  border-color: #ff00e0;
+  box-shadow: 0 0 10px #ff00e0;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.btn {
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  font-weight: bold;
-  text-transform: uppercase;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-  margin-right: 1rem;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-}
-
-.btn-secondary:hover {
-  background-color: #5a6268;
+.footer-estelar {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.4);
+  color: #ccc;
+  border-top: 1px solid #00f0ff;
+  margin-top: 2rem;
 }

@@ -1,43 +1,82 @@
 {% extends 'adminmod/base.html' %}
-{% load static %}
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/admin_producto_form.css' %}">
-{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2>{{ titulo }}</h2>
+<style>
+  /* Estilos solo para el formulario de producto */
+  #formulario-producto {
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    font-family: Arial, sans-serif;
+  }
 
-  <form method="post">
-    {% csrf_token %}
+  #formulario-producto h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
 
-    <div class="mb-3">
-      <label for="codigo" class="form-label">Código</label>
-      <input type="text" class="form-control" id="codigo" name="codigo" value="{{ producto.codigo|default_if_none:'' }}" required>
-    </div>
+  #formulario-producto label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #444;
+  }
 
-    <div class="mb-3">
-      <label for="nombre" class="form-label">Nombre</label>
-      <input type="text" class="form-control" id="nombre" name="nombre" value="{{ producto.nombre|default_if_none:'' }}" required>
-    </div>
+  #formulario-producto input[type="text"],
+  #formulario-producto input[type="number"],
+  #formulario-producto input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+  }
 
-    <div class="mb-3">
-      <label for="marca" class="form-label">Marca</label>
-      <input type="text" class="form-control" id="marca" name="marca" value="{{ producto.marca|default_if_none:'' }}" required>
-    </div>
+  #formulario-producto button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background-color: #1b0f63;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+  }
 
-    <div class="mb-3">
-      <label for="precio" class="form-label">Precio</label>
-      <input type="number" step="0.01" class="form-control" id="precio" name="precio" value="{{ producto.precio|default_if_none:'' }}" required>
-    </div>
+  #formulario-producto button:hover {
+    background-color: #1900ff;
+  }
+</style>
 
-    <div class="mb-3">
-      <label for="stock" class="form-label">Stock</label>
-      <input type="number" class="form-control" id="stock" name="stock" value="{{ producto.stock|default_if_none:'' }}" required>
-    </div>
+<form id="formulario-producto" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <h2>Agregar nuevo producto</h2>
+  
+  <label for="codigo">Código:</label>
+  <input type="text" name="codigo" id="codigo" required>
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <a href="{% url 'admin_productos' %}" class="btn btn-secondary">Cancelar</a>
-  </form>
-</div>
+  <label for="nombre">Nombre:</label>
+  <input type="text" name="nombre" id="nombre" required>
+
+  <label for="marca">Marca:</label>
+  <input type="text" name="marca" id="marca" required>
+
+  <label for="precio">Precio:</label>
+  <input type="number" name="precio" id="precio" required>
+  
+  <label for="stock" class="block text-gray-700 font-bold mb-2">Stock</label>
+  <input type="number" id="stock" name="stock" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500" required>
+
+
+  <label for="imagen">Imagen:</label>
+  <input type="file" name="imagen" id="imagen">
+
+  <button type="submit">Guardar</button>
+</form>
 {% endblock %}
