@@ -5,22 +5,28 @@
 {% endblock %}
 {% block content %}
     <div class="dashboard-container">
+        
         <h1>Bienvenido al Panel de Administración 🛠️</h1>
         <p class="intro">Gestiona tu galaxia de productos, usuarios y ventas.</p>
 
         <div class="cards">
-            <div class="card">
+            <a href="{% url 'admin_usuarios' %}"><div class="card">
                 <h2>Usuarios</h2>
                 <p>Control total sobre las cuentas registradas.</p>
             </div>
+            </a>
+            <a href="{% url 'admin_productos' %}">
             <div class="card">
                 <h2>Productos</h2>
-                <p>Administra tu inventario cósmico.</p>
+                <p>Administra tu inventario.</p>
             </div>
+            </a>
+            <a href="{% url 'admin_ventas' %}">
             <div class="card">
                 <h2>Ventas</h2>
                 <p>Observa el flujo de tu imperio comercial.</p>
             </div>
+            </a>
         </div>
     </div>
 

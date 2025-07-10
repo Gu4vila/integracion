@@ -281,7 +281,38 @@ def modificar_user_admin(request, usuario_id):
         return redirect('users_admins')
 
 def admin_ventas(request):
-    return render(request, 'adminmod/admin_ventas.html', {})
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+
+    params = {}
+    if fecha_inicio:
+        params['fecha_inicio'] = fecha_inicio
+    if fecha_fin:
+        params['fecha_fin'] = fecha_fin
+
+    try:
+        response = requests.get('http://localhost:5000/dashboard', params=params, timeout=5)
+        data = response.json()
+    except Exception:
+        data = {
+            'total_ventas': 0,
+            'total_ingresos': 0,
+            'ventas_categoria': [],
+            'productos_vendidos': [],
+            'stock_bajo': []
+        }
+
+    context = {
+        'total_ventas': data.get('total_ventas'),
+        'total_ingresos': data.get('total_ingresos'),
+        'ventas_categoria': data.get('ventas_categoria', []),
+        'productos_vendidos': data.get('productos_vendidos', []),
+        'stock_bajo': data.get('stock_bajo', []),
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin,
+    }
+
+    return render(request, 'adminmod/admin_ventas.html', context)
 
 def panel_admin(request):
     return render(request, 'adminmod/panel_admin.html', {})
