@@ -48,7 +48,20 @@ def admin_productos(request):
     return render(request, 'adminmod/admin_productos.html', {'productos': productos})
 
 # Crear nuevo producto
-def admin_producto_crear(request):
+def admin_producto_crear(request, producto_id=None):
+    producto = {}
+
+    # Si estamos editando, obtenemos los datos del producto
+    if producto_id:
+        try:
+            response = requests.get(f'{API_BASE_URL}/productos/{producto_id}')
+            if response.status_code == 200:
+                producto = response.json()
+            else:
+                messages.error(request, "No se pudo obtener el producto.")
+        except requests.exceptions.RequestException as e:
+            messages.error(request, f"Error al obtener el producto: {e}")
+
     if request.method == 'POST':
         datos = {
             'codigo': request.POST.get('codigo'),
@@ -62,20 +75,29 @@ def admin_producto_crear(request):
         files = {'imagen': imagen} if imagen else {}
 
         try:
-            response = requests.post(
-                f'{API_BASE_URL}/productos',
-                data=datos,         # Form fields
-                files=files         # Imagen como archivo
-            )
-            if response.status_code == 200 or response.status_code == 201:
-                messages.success(request, "Producto creado exitosamente.")
+            # Si es edición, usamos PUT, si no POST
+            if producto_id:
+                response = requests.put(
+                    f'{API_BASE_URL}/productos/{producto_id}',
+                    data=datos,
+                    files=files
+                )
+            else:
+                response = requests.post(
+                    f'{API_BASE_URL}/productos',
+                    data=datos,
+                    files=files
+                )
+
+            if response.status_code in [200, 201]:
+                messages.success(request, "Producto guardado exitosamente.")
                 return redirect('admin_productos')
             else:
                 messages.error(request, response.json().get('error', 'Error desconocido'))
         except requests.exceptions.RequestException as e:
-            messages.error(request, f"Error al crear el producto: {e}")
+            messages.error(request, f"Error al guardar el producto: {e}")
 
-    return render(request, 'adminmod/admin_producto_form.html')
+    return render(request, 'adminmod/admin_producto_form.html', {'producto': producto})
 
 # Editar producto existente
 def admin_producto_editar(request, producto_id):    

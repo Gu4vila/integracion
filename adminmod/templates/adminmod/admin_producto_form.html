@@ -56,27 +56,27 @@
 
 <form id="formulario-producto" method="post" enctype="multipart/form-data">
   {% csrf_token %}
-  <h2>Agregar nuevo producto</h2>
+  <h2>{{ producto.id|default_if_none:"Agregar nuevo producto" }}</h2>
   
   <label for="codigo">Código:</label>
-  <input type="text" name="codigo" id="codigo" required>
+  <input type="text" name="codigo" id="codigo" value="{{ producto.codigo|default_if_none:'' }}" required>
 
   <label for="nombre">Nombre:</label>
-  <input type="text" name="nombre" id="nombre" required>
+  <input type="text" name="nombre" id="nombre" value="{{ producto.nombre|default_if_none:'' }}" required>
 
   <label for="marca">Marca:</label>
-  <input type="text" name="marca" id="marca" required>
+  <input type="text" name="marca" id="marca" value="{{ producto.marca|default_if_none:'' }}" required>
 
   <label for="precio">Precio:</label>
-  <input type="number" name="precio" id="precio" required>
-  
-  <label for="stock" class="block text-gray-700 font-bold mb-2">Stock</label>
-  <input type="number" id="stock" name="stock" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500" required>
+  <input type="number" name="precio" id="precio" value="{{ producto.precio|default_if_none:'' }}" required>
 
+  <label for="stock">Stock:</label>
+  <input type="number" name="stock" id="stock" value="{{ producto.stock|default_if_none:'' }}" required>
 
   <label for="imagen">Imagen:</label>
   <input type="file" name="imagen" id="imagen">
 
   <button type="submit">Guardar</button>
 </form>
+
 {% endblock %}
